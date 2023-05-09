@@ -1,0 +1,53 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+bool visits[101][101] = { false };
+int mainCount = 0;
+
+void QuestRect(int x, int y, vector<string> maps) {
+    int xSize = maps.size() - 1;
+    int ySize = maps[0].size() - 1;
+    int minX = max(0, x-1);
+    int minY = max(0, y-1);
+    int maxX = min(x+1, xSize);
+    int maxY = min(y+1, ySize);
+
+    visits[x][y] = true;
+    if (maps[x][y] != 'X')
+        mainCount += (maps[x][y] - '0');
+
+    if (maps[minX][y] != 'X' && !visits[minX][y]) {
+        QuestRect(minX, y, maps);
+    }
+    if (maps[x][minY] != 'X' && !visits[x][minY]) {
+        QuestRect(x, minY, maps);
+    }
+    if (maps[maxX][y] != 'X' && !visits[maxX][y]) {
+        QuestRect(maxX, y, maps);
+    }
+    if (maps[x][maxY] != 'X' && !visits[x][maxY]) {
+        QuestRect(x, maxY, maps);
+    }
+}
+
+vector<int> solution(vector<string> maps) {
+    vector<int> answer;
+
+    for (int i = 0; i < maps.size(); i++)
+        for (int j = 0; j < maps[0].size(); j++)
+            if (maps[i][j] != 'X' && !visits[i][j]) {
+                mainCount = 0;
+                QuestRect(i, j, maps);
+                answer.push_back(mainCount);
+            }
+
+    if(!answer.empty())
+        sort(answer.begin(), answer.end());
+    else
+        answer.push_back(-1);
+
+    return answer;
+}
