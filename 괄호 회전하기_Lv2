@@ -1,0 +1,60 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+int solution(string s) {
+    int answer = 0;
+    int count = 0;
+    int minValue = 1;
+    int point = 0;
+    vector<char> strList;
+
+    for (int i = 0; i < s.length(); i++) {
+        if (s[i] == '[' || s[i] == '{' || s[i] == '(') {
+            count++;
+            if (minValue > 0)
+                minValue = count;
+        }
+        else {
+            count--;
+            if (minValue > count) {
+                minValue = count;
+                point = i;
+            }
+        }
+    }
+
+    string str1 = s.substr(0, point + 1);
+    string str2 = s.substr(point + 1, s.length());
+    s = str2 + str1;
+
+    count = 0;
+    for (int i = 0; i < s.length(); i++)
+    {
+        if (s[i] == '[') {
+            strList.push_back(']');
+            count++;
+        }
+        else if (s[i] == '(') {
+            strList.push_back(')');
+            count++;
+        }
+        else if (s[i] == '{') {
+            strList.push_back('}');
+            count++;
+        }
+        else {
+            if (!strList.empty()) {
+                if (s[i] == strList.back()) {
+                    strList.pop_back();
+                    count--;
+                    if (count == 0)
+                        answer++;
+                }
+            }
+        }
+
+    }
+    return answer;
+}
