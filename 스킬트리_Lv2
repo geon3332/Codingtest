@@ -1,0 +1,36 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+int solution(string skill, vector<string> skill_trees) {
+    int answer = 0;
+
+    for (int i = 0; i < skill_trees.size(); i++)
+    {
+        int next = 0;
+        bool state = true;
+
+        for (int j = 0; j < skill_trees[i].length(); j++)
+        {
+            for (int k = next; k < skill.length() && next < skill.length(); k++)
+            {
+                if (skill[k] == skill_trees[i][j]) {
+                    if (k == next) {
+                        next++;
+                        break;
+                    }
+                    else if (k != next) {
+                        state = false;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if(state)
+            answer++;
+    }
+
+    return answer;
+}
