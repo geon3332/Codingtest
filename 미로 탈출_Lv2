@@ -1,0 +1,95 @@
+#include <string>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+int solution(vector<string> maps) {
+    int answer = 0;
+    int leverX = 0, leverY = 0;
+    int exitX = 0, exitY = 0;
+    int dist[101][101] = { 0 };
+    bool visited[101][101] = { false };
+    queue<pair<int, int>> road;
+    
+    for (int x = 0; x < maps.size(); x++)
+    {
+        for (int y = 0; y < maps[0].size(); y++)
+        {
+            switch (maps[x][y])
+            {
+            case 'S':
+                road.push({ x, y });
+                visited[x][y] = true;
+                break;
+            case 'L':
+                leverX = x;
+                leverY = y;
+                break;
+            case 'E':
+                exitX = x;
+                exitY = y;
+                break;
+            }
+        }
+    }
+
+    bool exitRun = false;
+    vector<pair<int, int>> searchRoad;
+    while (1) {
+        int x = road.front().first;
+        int y = road.front().second;
+        int xSize = maps.size() - 1;
+        int ySize = maps[0].size() - 1;
+        int minX = max(0, x - 1);
+        int minY = max(0, y - 1);
+        int maxX = min(x + 1, xSize);
+        int maxY = min(y + 1, ySize);
+
+        road.pop();
+        if (!exitRun) {
+            if (x == leverX && y == leverY) {
+                road = queue<pair<int, int>>();
+                for (int x = 0; x < maps.size(); x++)
+                    for (int y = 0; y < maps[0].size(); y++)
+                        visited[x][y] = false;
+                visited[x][y] = true;
+                exitRun = true;
+            }
+        }
+        else
+            if (x == exitX && y == exitY) {
+                answer = dist[x][y];
+                break;
+            }
+
+        if (maps[minX][y] != 'X' && !visited[minX][y]) {
+            road.push({ minX, y });
+            dist[minX][y] = dist[x][y] + 1;
+            visited[minX][y] = true;
+        }
+
+        if (maps[x][minY] != 'X' && !visited[x][minY]) {
+            road.push({ x, minY });
+            dist[x][minY] = dist[x][y] + 1;
+            visited[x][minY] = true;
+        }
+
+        if (maps[maxX][y] != 'X' && !visited[maxX][y]) {
+            road.push({ maxX, y });
+            dist[maxX][y] = dist[x][y] + 1;
+            visited[maxX][y] = true;
+        }
+
+        if (maps[x][maxY] != 'X' && !visited[x][maxY]) {
+            road.push({ x, maxY });
+            dist[x][maxY] = dist[x][y] + 1;
+            visited[x][maxY] = true;
+        }
+
+        if (road.empty())
+            return -1;
+    }
+
+    return answer;
+}
