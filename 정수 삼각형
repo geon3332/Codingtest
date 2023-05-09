@@ -1,0 +1,31 @@
+#include <string>
+#include <vector>
+#include <cmath>
+
+using namespace std;
+
+int solution(vector<vector<int>> triangle) {
+    int answer = 0;
+    int dp[500][500] = { 0 };
+
+    dp[0][0] = triangle[0][0];
+    for (int i = 1; i < triangle.size(); i++)
+    {
+        for (int j = 0; j < triangle[i].size(); j++)
+        {
+            int temp = triangle[i][j];
+            if (j == 0)
+                dp[i][j] = dp[i - 1][j] + temp;
+            else if (j == triangle[i].size() - 1)
+                dp[i][j] = dp[i - 1][j - 1] + temp;
+            else
+                dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - 1]) + temp;
+
+            if (i == triangle[i].size() - 1) {
+                answer = max(answer, dp[i][j]);
+            }
+        }
+    }
+
+    return answer;
+}
