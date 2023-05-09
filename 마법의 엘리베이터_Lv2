@@ -1,0 +1,24 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+int solution(int storey) {
+    int answer = 0;
+
+    while (storey != 0) {
+        int value = storey % 10;
+
+        if (value > 5 || (value == 5 && (storey%100/10) >= 5)) {
+            storey = storey + (10 - value);
+            answer += (10 - value);
+        }
+        else {
+            storey = storey - value;
+            answer += value;
+        }
+        storey /= 10;
+    }
+
+    return answer;
+}
