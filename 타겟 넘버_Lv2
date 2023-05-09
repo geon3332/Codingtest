@@ -1,0 +1,22 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+int answer = 0;
+
+void Result(vector<int> numbers, int target, int add, int num) {
+    if (num == numbers.size()) {
+        if (add == target)
+            answer++;
+    }
+    else {
+        Result(numbers, target, add + numbers[num], num+1);
+        Result(numbers, target, add - numbers[num], num+1);
+    }
+}
+
+int solution(vector<int> numbers, int target) {
+    Result(numbers, target, 0, 0);
+    return answer;
+}
