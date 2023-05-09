@@ -1,0 +1,31 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <map>
+#include <algorithm>
+
+using namespace std;
+
+int solution(int k, vector<int> tangerine) {
+    int answer = 0;
+    map<int, int> theMap;
+
+    for (auto i : tangerine) {
+        theMap[i]++;
+    }
+    vector<int> value;
+    for (auto i : theMap) {
+        value.push_back(i.second);
+    }
+    sort(value.begin(), value.end(), greater<int>());
+
+    int add = 0;
+    for (int i = 0; i < value.size(); i++)
+    {
+        if (add >= k)
+            break;
+        answer++;
+        add += value[i];
+    }
+    return answer;
+}
