@@ -1,0 +1,78 @@
+#include <string>
+#include <vector>
+#include <map>
+
+using namespace std;
+
+bool MapCheck(vector<string> places) {
+    int maxX = places.size() - 1;
+    int maxY = places[0].size() - 1;
+    map<pair<int, int>, bool> pMap;
+    map<pair<int, int>, bool> xMap;
+
+    for (int i = 0; i < places.size(); i++)
+        for (int j = 0; j < places[0].size(); j++)
+            if(places[i][j] == 'P')
+                pMap[{i, j}] = true;
+            else if(places[i][j] == 'X')
+                xMap[{i, j}] = true;
+
+    while (!pMap.empty()) {
+        auto p = pMap.begin();
+        int x = p->first.first;
+        int y = p->first.second;
+
+        pMap.erase({ x, y });
+
+        if (pMap.count({ max(x - 1, 0), y }) > 0 || pMap.count({ min(x + 1, maxX), y }) > 0 ||
+            pMap.count({ x, max(y - 1, 0) }) > 0 || pMap.count({ x, min(y + 1, maxY) }) > 0)
+            return false;
+
+        if(x - 1 >= 0 && y - 1 >= 0)
+            if (pMap.count({ x - 1, y - 1 }) > 0 &&
+                (xMap.count({ x - 1, y }) == 0 || xMap.count({ x, y - 1 }) == 0))
+                return false;
+
+        if (x + 1 <= maxX && y - 1 >= 0)
+            if (pMap.count({ x + 1, y - 1 }) > 0 &&
+                (xMap.count({ x + 1, y }) == 0 || xMap.count({ x, y - 1 }) == 0))
+                return false;
+
+        if (x - 1 >= 0 && y + 1 <= maxY)
+            if (pMap.count({ x - 1, y + 1 }) > 0 &&
+                (xMap.count({ x - 1, y }) == 0 || xMap.count({ x, y + 1 }) == 0))
+                return false;
+
+        if (x + 1 <= maxX && y + 1 <= maxY)
+            if (pMap.count({ x + 1, y + 1 }) > 0 &&
+                (xMap.count({ x + 1, y }) == 0 || xMap.count({ x, y + 1 }) == 0))
+                return false;
+
+        if (x - 2 >= 0)
+            if (pMap.count({ x - 2, y }) > 0 && xMap.count({ x - 1, y }) == 0)
+                return false;
+
+        if (x + 2 <= maxX)
+            if (pMap.count({ x + 2, y }) > 0 && xMap.count({ x + 1, y }) == 0)
+                return false;
+
+        if (y - 2 >= 0)
+            if (pMap.count({ x, y - 2 }) > 0 && xMap.count({ x, y - 1 }) == 0)
+                return false;
+
+        if (y + 2 <= maxY)
+            if (pMap.count({ x, y + 2 }) > 0 && xMap.count({ x, y + 1 }) == 0)
+                return false;
+    }
+
+    return true;
+}
+
+vector<int> solution(vector<vector<string>> places) {
+    vector<int> answer;
+
+    for (int i = 0; i < places.size(); i++)
+        answer.push_back(MapCheck(places[i]));
+
+    return answer;
+}
