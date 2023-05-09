@@ -1,0 +1,29 @@
+#include <string>
+#include <vector>
+#include <queue>
+#include <cmath>
+
+using namespace std;
+
+long long solution(int n, vector<int> works) {
+    long long answer = 0;
+    priority_queue<int> data(works.begin(), works.end());
+
+    while (n > 0) {
+        if (data.top() > 0) {
+            long long temp = data.top() - 1;
+            data.pop();
+            data.push(temp);
+            n--;
+        }
+        else
+            return 0;
+    }
+
+    while (!data.empty()) {
+        answer += pow(data.top(), 2);
+        data.pop();
+    }
+
+    return answer;
+}
