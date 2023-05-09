@@ -1,0 +1,25 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+vector<int> solution(int brown, int yellow) {
+    vector<int> answer;
+
+    for (int i = brown; i >= 1; i--)
+    {
+        if (yellow % i == 0 || (yellow == 1 && i == 1)) {
+            int width = i + 2;
+            int height = yellow / i + 2;
+            int sub = (width * 2) - 2;
+            sub += (height * 2) - 2;
+
+            if (sub == brown) {
+                answer.push_back(width);
+                answer.push_back(height);
+                break;
+            }
+        }
+    }
+    return answer;
+}
