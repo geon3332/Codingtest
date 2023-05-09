@@ -1,0 +1,50 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <string>
+
+using namespace std;
+
+string GetString(string str, int point) {
+    return str.substr(point, str.length() - point);
+}
+
+vector<int> solution(vector<string> operations) {
+    vector<int> answer;
+    vector<int> queues;
+
+    for (int i = 0; i < operations.size(); i++)
+    {
+        switch (operations[i][0])
+        {
+        case 'I':
+            queues.push_back(stoi(GetString(operations[i], 2)));
+            break;
+        case 'D':
+            if (!queues.empty()) {
+                switch (operations[i][2]) {
+                case '1':
+                    sort(queues.begin(), queues.end());
+                    queues.pop_back();
+                    break;
+                case '-':
+                    sort(queues.begin(), queues.end(), greater<>());
+                    queues.pop_back();
+                    break;
+                }
+            }
+
+            break;
+        }
+    }
+    if (!queues.empty()) {
+        sort(queues.begin(), queues.end());
+        answer.push_back(queues.back());
+        answer.push_back(queues.front());
+    }
+    else {
+        answer.push_back(0);
+        answer.push_back(0);
+    }
+    return answer;
+}
