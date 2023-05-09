@@ -1,0 +1,31 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+int solution(int bridge_length, int weight, vector<int> truck_weights) {
+    int time = 0;
+    int newWeight = 0;
+    int truckCount = 0;
+    int min = 0;
+    vector<int> truckTime;
+
+    while(min < truck_weights.size()){
+        for (int i = min; i < truckTime.size(); i++)
+        {
+            truckTime[i]++;
+            if (truckTime[i] >= bridge_length) {
+                newWeight -= truck_weights[i];
+                min++;
+            }
+        }
+        if (truckCount < truck_weights.size() && newWeight + truck_weights[truckCount] <= weight) {
+            truckTime.push_back(0);
+            newWeight += truck_weights[truckCount];
+            truckCount++;
+        }
+        time++;
+    }
+
+    return time;
+}
