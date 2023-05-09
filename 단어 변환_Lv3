@@ -1,0 +1,43 @@
+#include <string>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+int solution(string begin, string target, vector<string> words) {
+    int answer = 0;
+    queue<pair<string, int>> search;
+    bool visit[10000] = { false };
+
+    search.push({ begin, 0 });
+    while (!search.empty()) {
+        string str = search.front().first;
+        int num = search.front().second;
+        if (str == target) {
+            answer = num;
+            break;
+        }
+
+        for (int i = 0; i < words.size(); i++)
+        {
+            for (int j = 0; j < target.length(); j++)
+            {
+                if (visit[i] == false) {
+                    if (str[j] != words[i][j]) {
+                        string strA = str;
+                        string strB = words[i];
+                        strA.erase(j, 1);
+                        strB.erase(j, 1);
+                        if (strA == strB) {
+                            visit[i] = true;
+                            search.push({ words[i], num + 1 });
+                        }
+                    }
+                }
+            }
+        }
+        search.pop();
+    }
+
+    return answer;
+}
