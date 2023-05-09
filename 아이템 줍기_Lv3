@@ -1,0 +1,86 @@
+#include <string>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+int answer = 0;
+int existAxis[201][201] = { 0 };
+const int MAX_SIZE = 101;
+queue<pair<pair<int, int>, int>> road;
+
+bool RoadCheck(int x, int y) {
+    if (existAxis[x][y] == 0 || existAxis[x][y] == 1024)
+        return false;
+    else {
+        int minX = max(0, x - 1);
+        int maxX = min(MAX_SIZE, x + 1);
+        int minY = max(0, y - 1);
+        int maxY = min(MAX_SIZE, y + 1);
+
+        return existAxis[minX][minY] == 0 || existAxis[maxX][minY] == 0 || existAxis[minX][maxY] == 0 || existAxis[maxX][maxY] == 0 ||
+            existAxis[x][minY] == 0 || existAxis[x][maxY] == 0 || existAxis[minX][y] == 0 || existAxis[maxX][y] == 0;
+    }
+}
+
+void ChaseRoad(int itemX, int itemY) {
+    int pointX = road.front().first.first;
+    int pointY = road.front().first.second;
+    int num = road.front().second;
+
+    road.pop();
+    existAxis[pointX][pointY] = 1024;
+    if (pointX == itemX && pointY == itemY) {
+        answer = num;
+        return;
+    }
+    if (RoadCheck(pointX - 1, pointY))
+        road.push({ {pointX - 1, pointY}, num + 1 });
+    if (RoadCheck(pointX + 1, pointY))
+        road.push({ {pointX + 1, pointY}, num + 1 });
+    if (RoadCheck(pointX, pointY - 1))
+        road.push({ {pointX, pointY - 1}, num + 1 });
+    if (RoadCheck(pointX, pointY + 1))
+        road.push({ {pointX, pointY + 1}, num + 1 });
+    ChaseRoad(itemX, itemY);
+}
+
+int solution(vector<vector<int>> rectangle, int characterX, int characterY, int itemX, int itemY) {
+
+    for (auto rect : rectangle) {
+        int x = rect[0] * 2;
+        int y = rect[1] * 2;
+        int endX = rect[2] * 2;
+        int endY = rect[3] * 2;
+        existAxis[x][y] += 1;
+        existAxis[endX + 1][endY + 1] += 1;
+        existAxis[x][endY + 1] -= 1;
+        existAxis[endX + 1][y] -= 1;
+    }
+
+    for (int i = 0; i <= MAX_SIZE; i++)
+        for (int j = 0; j < MAX_SIZE; j++)
+            existAxis[i][j + 1] += existAxis[i][j];
+
+    for (int j = 0; j <= MAX_SIZE; j++)
+        for (int i = 0; i < MAX_SIZE; i++)
+            existAxis[i + 1][j] += existAxis[i][j];
+
+    int pointX = characterX * 2;
+    int pointY = characterY * 2;
+    if (RoadCheck(pointX - 1, pointY))
+        road.push({ {pointX - 1, pointY}, 1 });
+
+    if (RoadCheck(pointX + 1, pointY))
+        road.push({ {pointX + 1, pointY}, 1 });
+
+    if (RoadCheck(pointX, pointY - 1))
+        road.push({ {pointX, pointY - 1}, 1 });
+
+    if (RoadCheck(pointX, pointY + 1))
+        road.push({ {pointX, pointY + 1}, 1 });
+
+    ChaseRoad(itemX * 2, itemY * 2);
+
+    return answer / 2;
+}
