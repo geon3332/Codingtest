@@ -1,0 +1,44 @@
+#include <string>
+#include <vector>
+#include <map>
+
+using namespace std;
+
+int solution(vector<int> topping) {
+    int answer = 0;
+    int subList[1000001] = { 0 };
+    int subList2[1000001] = { 0 };
+    map<int, bool> theMaps;
+
+    if (topping.empty())
+        return 0;
+    
+    theMaps[topping[0]] = true;
+    subList[0] = 1;
+    for (int i = 0; i < topping.size()-1; i++) {
+        if (theMaps.count(topping[i + 1]) == 0) {
+            subList[i + 1] += subList[i] + 1;
+            theMaps[topping[i + 1]] = true;
+        }
+        else
+            subList[i + 1] += subList[i];
+    }
+
+    theMaps.clear();
+    subList2[topping.size() - 1] = 1;
+    theMaps[topping[topping.size() - 1]] = true;
+    for (int i = topping.size() - 1; i > 0; i--) {
+        if (theMaps.count(topping[i - 1]) == 0) {
+            subList2[i - 1] += subList2[i] + 1;
+            theMaps[topping[i - 1]] = true;
+        }
+        else
+            subList2[i - 1] += subList2[i];
+
+        if (subList[i - 1] == subList2[i]) {
+            answer++;
+        }
+    }
+
+    return answer;
+}
