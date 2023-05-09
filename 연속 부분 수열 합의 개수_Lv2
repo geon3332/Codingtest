@@ -1,0 +1,29 @@
+#include <string>
+#include <vector>
+#include <map>
+
+using namespace std;
+
+int solution(vector<int> elements) {
+    int answer = 0;
+    int size = 1;
+    map<int, int> theMap;
+
+    while (size <= elements.size()) {
+        for (int i = 0; i < elements.size(); i++)
+        {
+            int value = 0;
+            for (int j = i; j < i+size; j++)
+            {
+                value += elements[j % elements.size()];
+            }
+
+            theMap.insert({ value, i });
+        }
+        size++;
+    }
+    for (auto it = theMap.begin(); it != theMap.end(); it++) {
+        answer++;
+    }
+    return answer;
+}
