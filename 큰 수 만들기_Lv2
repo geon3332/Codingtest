@@ -1,0 +1,21 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+string solution(string number, int k) {
+    int point = 1;
+    for (int i = 0; i < k; i++)
+    {
+        for (int j = point; j <= number.length(); j++)
+        {
+            if (number[j - 1] < number[j] || number.length() == j) {
+                number.erase(j - 1, 1);
+                point = max(1, j - 1);
+                break;
+            }
+        }
+    }
+
+    return number;
+}
