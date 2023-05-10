@@ -1,0 +1,23 @@
+#include <string>
+#include <vector>
+#include <climits>
+
+using namespace std;
+
+int solution(vector<int> a) {
+    int answer = 1;
+    vector<int> maxData;
+
+    maxData.push_back(a[0]);
+    for (int i = 1; i < a.size() - 1; i++)
+        maxData.push_back(min(a[i], maxData.back()));
+
+    int minValue = INT_MAX;
+    for (int i = a.size() - 1; i > 0; i--) {
+        if (a[i] < maxData[i - 1] || a[i] < minValue)
+            answer++;
+        minValue = min(minValue, a[i]);
+    }
+
+    return answer;
+}
