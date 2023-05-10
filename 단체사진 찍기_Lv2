@@ -1,0 +1,43 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int solution(int n, vector<string> data) {
+    int answer = 0;
+    string str = "ACFJMNRT";
+    
+    do {
+        bool state = true;
+        for (auto d : data)
+        {
+            int dist = abs((int)(str.find(d[0]) - str.find(d[2]))) - 1;
+            int target_dist = d[4] - '0';
+            switch (d[3])
+            {
+            case '=':
+                if (!(dist == target_dist)) {
+                    state = false;
+                }
+                break;
+            case '<':
+                if (!(dist < target_dist)) {
+                    state = false;
+                }
+                break;
+            case '>':
+                if (!(dist > target_dist)) {
+                    state = false;
+                }
+                break;
+            }
+            if (!state)
+                break;
+        }
+        if (state)
+            answer++;
+    } while (next_permutation(str.begin(), str.end()));
+
+    return answer;
+}
