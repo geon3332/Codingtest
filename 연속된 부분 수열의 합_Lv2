@@ -1,0 +1,44 @@
+#include <string>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+struct cmd {
+    bool operator()(pair<int, int>& a, pair<int, int>& b) {
+        return a.second - a.first > b.second - b.first;
+    }
+};
+
+vector<int> solution(vector<int> sequence, int k) {
+    vector<int> answer;
+    priority_queue<pair<int, int>, vector<pair<int, int>>, cmd> data;
+    int start = 0;
+    int end = 0;
+    int add = sequence[0];
+
+    while (end < sequence.size()) {
+        if (add < k) {
+            end++;
+            if (end < sequence.size())
+                add += sequence[end];
+            else
+                break;
+        }
+        else if (add > k) {
+            add -= sequence[start];
+            start++;
+        }
+        else {
+            data.push({ start, end });
+            end++;
+            if (end < sequence.size())
+                add += sequence[end];
+            else
+                break;
+        }
+    }
+    answer.push_back(data.top().first);
+    answer.push_back(data.top().second);
+    return answer;
+}
