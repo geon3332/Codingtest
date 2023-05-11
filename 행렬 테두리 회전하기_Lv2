@@ -1,0 +1,61 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+int SetSpin(int rows, int columns, vector<vector<int>> &map, vector<int> queries) {
+    queries[0]--;
+    queries[1]--;
+    queries[2]--;
+    queries[3]--;
+    int x = queries[0];
+    int y = queries[1];
+    int minValue = 100000;
+    int moveX = 1;
+    int moveY = 0;
+    int temp = map[x][y];
+
+    while (1) {
+        minValue = min(minValue, map[x][y]);
+        if (moveX == 1 && moveY == 0 && x >= queries[2]) {
+            moveX = 0;
+            moveY = 1;
+        }
+        else if (moveX == 0 && moveY == 1 && y >= queries[3]) {
+            moveX = -1;
+            moveY = 0;
+        }
+        else if (moveX == -1 && moveY == 0 && x <= queries[0]) {
+            moveX = 0;
+            moveY = -1;
+        }
+        if (moveX == 0 && moveY == -1 && y <= queries[1] + 1) {
+            map[x][y] = temp;
+            break;
+        }
+        map[x][y] = map[x + moveX][y + moveY];
+        x += moveX;
+        y += moveY;
+    }
+    return minValue;
+}
+
+vector<int> solution(int rows, int columns, vector<vector<int>> queries) {
+    vector<int> answer;
+    vector<vector<int>> map;
+    int count = 0;
+    for (int i = 0; i < rows; i++)
+    {
+        vector<int> value;
+        for (int j = 0; j < columns; j++)
+        {
+            value.push_back(++count);
+        }
+        map.push_back(value);
+    }
+
+    for (auto q : queries)
+        answer.push_back(SetSpin(rows, columns, map, q));
+
+    return answer;
+}
