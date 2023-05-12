@@ -1,0 +1,59 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+struct fileData {
+    string head;
+    int number;
+    int point;
+};
+
+bool cmp(fileData a, fileData b) {
+    if (a.head == b.head) {
+        if (a.number == b.number)
+            return a.point > b.point;
+        else
+            return a.number > b.number;
+    }
+    else
+        return a.head > b.head;
+}
+
+vector<string> solution(vector<string> files) {
+    vector<string> answer;
+    vector<fileData> data;
+
+    for (int i = 0; i < files.size(); i++)
+    {
+        fileData fd;
+        fd.point = i;
+
+        int kind = 0;
+        string numberStr = "";
+
+        for (int j = 0; j < files[i].length(); j++)
+        {
+            if (kind == 0 && files[i][j] >= '0' && files[i][j] <= '9') {
+                kind++;
+            }
+            else if (kind == 1 && (files[i][j] < '0' || files[i][j] > '9')) {
+                break;
+            }
+            if (kind == 0)
+                fd.head += tolower(files[i][j]);
+            else
+                numberStr += files[i][j];
+        }
+        fd.number = stoi(numberStr);
+        data.push_back(fd);
+    }
+
+    sort(data.begin(), data.end(), cmp);
+    while (!data.empty()) {
+        answer.push_back(files[data.back().point]);
+        data.pop_back();
+    }
+    return answer;
+}
