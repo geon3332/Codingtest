@@ -1,0 +1,35 @@
+#include <string>
+#include <vector>
+#include <map>
+
+using namespace std;
+
+vector<int> solution(string msg) {
+    vector<int> answer;
+    map<string, int> theMaps;
+    int maxLength = 1;
+
+    string str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    for (int i = 0; i < str.length(); i++)
+        theMaps[{ str[i] }] = i + 1;
+
+    for (int i = 0; i < msg.length(); i++)
+    {
+        for (int j = maxLength; j > 0; j--)
+        {
+            string key = msg.substr(i, j);
+
+            if (theMaps.count(key) > 0) {
+                answer.push_back(theMaps[key]);
+                if (j + 1 < msg.length()) {
+                    theMaps[msg.substr(i, j + 1)] = theMaps.size() + 1;
+                    maxLength = max(maxLength, j + 1);
+                    i += j - 1;
+                }
+                break;
+            }
+        }
+    }
+
+    return answer;
+}
