@@ -1,0 +1,29 @@
+#include <string>
+#include <vector>
+#include <map>
+
+using namespace std;
+
+bool solution(vector<string> phone_book) {
+	map<string, bool> theMaps;
+    bool answer = true;
+
+	for (auto str : phone_book)
+		theMaps[str] = true;
+	
+	for (int i = 0; i < phone_book.size(); i++)
+	{
+		theMaps.erase(phone_book[i]);
+		string str = "";
+		for (char s : phone_book[i])
+		{
+			str += s;
+			if (theMaps.count(str) != 0) {
+				return false;
+			}
+		}
+		theMaps[phone_book[i]] = true;
+	}
+
+    return answer;
+}
