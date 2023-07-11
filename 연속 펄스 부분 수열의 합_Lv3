@@ -1,0 +1,39 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <cmath>
+
+using namespace std;
+
+long long solution(vector<int> sequence) {
+	long long answer = 0;
+	int change = 1;
+	long long max1 = 0, max2 = 0;
+	vector<long long> maxValues1, maxValues2;
+
+	maxValues1.push_back(sequence[0] * change);
+	change *= -1;
+	maxValues2.push_back(sequence[0] * change);
+
+	for (int i = 1; i < sequence.size(); i++)
+	{
+		long long tempValue1 = maxValues1.back() + (sequence[i] * change);
+		long long tempValue2 = sequence[i] * change;
+		if (tempValue1 > tempValue2)
+			maxValues1.push_back(tempValue1);
+		else
+			maxValues1.push_back(tempValue2);
+
+		change *= -1;
+		tempValue1 = maxValues2.back() + (sequence[i] * change);
+		tempValue2 = sequence[i] * change;
+		if (tempValue1 > tempValue2)
+			maxValues2.push_back(tempValue1);
+		else
+			maxValues2.push_back(tempValue2);
+	}
+	sort(maxValues1.begin(), maxValues1.end());
+	sort(maxValues2.begin(), maxValues2.end());
+	answer = max(maxValues1.back(), maxValues2.back());
+	return answer;
+}
