@@ -1,0 +1,56 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+
+int ownerData[2];
+bool Compare(vector<int> a, vector<int> b) {
+	return a[0] + a[1] > b[0] + b[1];
+}
+
+int solution(vector<vector<int>> scores) {
+	int answer = 0;
+	int ownerData[2];
+	ownerData[0] = scores[0][0];
+	ownerData[1] = scores[0][1];
+
+	sort(scores.begin(), scores.end(), Compare);
+	bool isSearch = false;
+	int firstInt = -1;
+	for (int i = 0; i < scores.size(); i++)
+	{
+		bool fall = false;
+
+		answer++;
+		if (i > 0) {
+			for (int j = 0; j < i; j++)
+			{
+				if (scores[i][0] < scores[j][0] && scores[i][1] < scores[j][1]) {
+					fall = true;
+					answer--;
+					break;
+				}
+			}
+		}
+		if (scores[i][0] + scores[i][1] == ownerData[0] + ownerData[1]) {
+			if (!fall && firstInt == -1)
+				firstInt = answer;
+
+			if (scores[i][0] == ownerData[0] && scores[i][1] == ownerData[1]) {
+				if (fall)
+					return -1;
+				else {
+					isSearch = true;
+					return firstInt;
+				}
+			}
+		}
+		else if (isSearch) {
+			break;
+		}
+	}
+	if (firstInt != -1)
+		answer = firstInt;
+	return answer;
+}
