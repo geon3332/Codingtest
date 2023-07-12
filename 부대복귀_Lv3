@@ -1,0 +1,42 @@
+#include <string>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+vector<int> solution(int n, vector<vector<int>> roads, vector<int> sources, int destination) {
+	vector<int> answer;
+	vector<int>*linkDatas = new vector<int>[n + 1];
+
+	for (auto data : roads) {
+		linkDatas[data[0]].push_back(data[1]);
+		linkDatas[data[1]].push_back(data[0]);
+	}
+
+	int* distance = new int[n + 1]();
+	fill_n(distance, n + 1, -1);
+	distance[destination] = 0;
+	queue<int> road;
+	for (auto data : linkDatas[destination]) {
+		road.push(data);
+		distance[data] = 1;
+	}
+
+	while (!road.empty()) {
+		int point = road.front();
+		int nowDistance = distance[point];
+
+		for (auto data : linkDatas[point]) {
+			if (distance[data] == -1) {
+				road.push(data);
+				distance[data] = nowDistance + 1;
+			}
+		}
+		road.pop();
+	}
+	for (auto point : sources) {
+		answer.push_back(distance[point]);
+	}
+
+	return answer;
+}
