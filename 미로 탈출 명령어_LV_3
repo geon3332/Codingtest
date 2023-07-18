@@ -1,0 +1,41 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+int GetDistance(int n, int m, int x, int y) {
+	return abs(n - x) + abs(m - y);
+}
+
+string solution(int n, int m, int x, int y, int r, int c, int k) {
+	string answer = "";
+	int firstDist = GetDistance(x, y, r, c);
+
+	if (firstDist > k || firstDist % 2 != k % 2)
+		return "impossible";
+
+	x--; y--; r--; c--;
+	while (k > 0)
+	{
+		k--;
+		int distance = GetDistance(x, y, r, c);
+		if (x < n - 1 && GetDistance(x + 1, y, r, c) <= k) {
+			x++;
+			answer += "d";
+		}
+		else if (y > 0 && GetDistance(x, y - 1, r, c) <= k) {
+			y--;
+			answer += "l";
+		}
+		else if (y < m - 1 && GetDistance(x, y + 1, r, c) <= k) {
+			y++;
+			answer += "r";
+		}
+		else if (x > 0 && GetDistance(x - 1, y, r, c) <= k) {
+			x--;
+			answer += "u";
+		}
+	}
+
+	return answer;
+}
