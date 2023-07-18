@@ -1,0 +1,34 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int MinNum(int backPos, int nextPos, int _size) {
+	int def = nextPos - backPos;
+	if (def <= 0)
+		return 0;
+	else {
+		if (def % _size == 0)
+			return def / _size;
+		else
+			return def / _size + 1;
+	}
+}
+
+int solution(int n, vector<int> stations, int w)
+{
+    int answer = 0;
+	int pos = 1;
+	int _size = w * 2 + 1;
+
+	sort(stations.begin(), stations.end());
+	for (auto data : stations) {
+		int backPos = data - w;
+		answer += MinNum(pos, backPos, _size);
+		pos = data + w + 1;
+	}
+	if (pos <= n)
+		answer += MinNum(pos, n + 1, _size);
+	return answer;
+}
+
