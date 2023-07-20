@@ -1,0 +1,47 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+int solution(int n, vector<vector<int>> results) {
+	const int nullInt = 2;
+    int answer = 0;
+	int score[105][105] = { 0 };
+
+	for (int i = 1; i <= n; i++) {
+		for (int j = 1; j <= n; j++) {
+			if (i == j)
+				score[i][j] = 0;
+			else
+				score[i][j] = nullInt;
+		}
+	}
+
+	for (auto data : results)
+	{
+		score[data[0]][data[1]] = 1;
+		score[data[1]][data[0]] = -1;
+	}
+
+	for (int k = 1; k <= n; k++)
+		for (int i = 1; i <= n; i++)
+			for (int j = 1; j <= n; j++) {
+				if (score[i][k] == 1 && score[k][j] == 1) {
+					score[i][j] = 1;
+					score[j][i] = -1;
+				}
+			}
+
+	for (int i = 1; i <= n; i++) {
+		bool isState = false;
+		for (int j = 1; j <= n; j++)
+			if (score[i][j] == nullInt) {
+				isState = true;
+				break;
+			}
+		if(!isState)
+			answer++;
+	}
+
+    return answer;
+}
