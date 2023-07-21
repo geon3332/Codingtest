@@ -1,0 +1,47 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+int solution(int N, int number) {
+	int answer = 0;
+	string str = "";
+	vector<vector<int>> dp;
+
+	for (int i = 0; i < 8; i++)
+	{
+		dp.push_back({});
+		str += to_string(N);
+		dp.back().push_back(stoi(str));
+
+		for (int j = 0; j < i; j++)
+		{
+			for (int k = 0; k < i; k++)
+			{
+				if (i + 1 == j + 1 + k + 1) {
+					for (auto data1 : dp[j]) {
+						for (auto data2 : dp[k]) {
+							if (data2 != 0) {
+								dp[i].push_back(data1 + data2);
+								dp[i].push_back(data1 - data2);
+								dp[i].push_back(data1 * data2);
+								dp[i].push_back(data1 / data2);
+							}
+							if (data1 != 0) {
+								dp[i].push_back(data2 - data1);
+								dp[i].push_back(data2 / data1);
+							}
+						}
+					}
+				}
+			}
+		}
+
+		for (auto data : dp[i]) {
+			if (data == number)
+				return i + 1;
+		}
+	}
+
+	return -1;
+}
