@@ -1,0 +1,34 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int solution(vector<int> stones, int k) {
+	int answer = 0;
+	int low = *min_element(stones.begin(), stones.end());
+	int high = *max_element(stones.begin(), stones.end());
+
+	while (low <= high) {
+        int mid = (low + high) / 2;
+
+		int nextCount = 0;
+		int maxCount = 0;
+		for (auto st : stones)
+		{
+			int value = st - mid;
+
+			nextCount = value < 0 ? nextCount + 1 : 0;
+			maxCount = max(nextCount, maxCount);
+		}
+
+		if (maxCount < k) {
+			answer = max(answer, mid);
+			low = mid + 1;
+		}
+		else
+			high = mid - 1;
+
+	}
+	return answer;
+}
