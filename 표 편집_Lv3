@@ -1,0 +1,85 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+struct Linked {
+    int num;
+    char isDel;
+    Linked* back;
+    Linked* next;
+};
+
+string solution(int n, int k, vector<string> cmd) {
+    string answer = "";
+    vector<Linked> linked;
+
+    for (int i = 0; i < n; i++)
+    {
+        linked.push_back({ i, 'O' });
+    }
+    for (int i = 0; i < n; i++)
+    {
+        if (i != 0)
+        {
+            linked[i].back = &linked[i - 1];
+            linked[i - 1].next = &linked[i];
+        }
+    }
+
+    vector<int> removeData;
+    for (auto data : cmd) {
+        int count = 0;
+
+        switch (data[0])
+        {
+        case 'U':
+            count = stoi(data.substr(2, data.length()));
+
+            while (count > 0 && linked[k].back != nullptr) {
+                k = linked[k].back->num;
+                count--;
+            }
+            break;
+        case 'D':
+            count = stoi(data.substr(2, data.length()));
+
+            while (count > 0 && linked[k].next != nullptr) {
+                k = linked[k].next->num;
+                count--;
+            }
+            break;
+        case 'C':
+            removeData.push_back(k);
+            if (linked[k].back != nullptr)
+                linked[k].back->next = linked[k].next;
+
+            if (linked[k].next != nullptr)
+                linked[k].next->back = linked[k].back;
+            linked[k].isDel = 'X';
+
+            if (linked[k].next != nullptr)
+                k = linked[k].next->num;
+            else
+                k = linked[k].back->num;
+
+            break;
+        case 'Z':
+            int rmNum = removeData.back();
+            if (linked[rmNum].back != nullptr)
+                linked[rmNum].back->next = &linked[rmNum];
+            if (linked[rmNum].next != nullptr)
+                linked[rmNum].next->back = &linked[rmNum];
+            linked[rmNum].isDel = 'O';
+
+            removeData.pop_back();
+            break;
+        }
+    }
+
+    for (auto ldata : linked) {
+        answer += ldata.isDel;
+    }
+
+    return answer;
+}
