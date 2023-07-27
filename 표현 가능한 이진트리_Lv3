@@ -1,0 +1,48 @@
+#include <string>
+#include <vector>
+#include <cmath>
+
+using namespace std;
+
+bool TreeCheck(vector<bool> tree, int center, int child) {
+    return (tree[center] >= tree[center - child] && tree[center] >= tree[center + child]);
+}
+
+vector<int> solution(vector<long long> numbers) {
+    vector<int> answer;
+
+    for (auto data : numbers) {
+        vector<bool> tree;
+        long long maxSize = 1;
+
+        while (data > 0) {
+            tree.push_back(data % 2 == 1);
+            data /= 2;
+            if (tree.size() > pow(2, maxSize) - 1)
+                maxSize++;
+        }
+        while (tree.size() < pow(2, maxSize) - 1)
+            tree.push_back(false);
+
+        long long isTree = 1;
+        for (long long i = 1; i < maxSize; i++)
+        {
+            long long count = pow(2, i + 1);
+            for (long long j = pow(2, i) - 1; j < pow(2, maxSize); j += count)
+            {
+                int next = pow(2, i - 1);
+                if (j + next >= pow(2, maxSize) || j - next < 0)
+                    break;
+
+                if (!TreeCheck(tree, j, next)) {
+                    isTree = 0;
+                    break;
+                }
+            }
+            if (isTree == 0)
+                break;
+        }
+        answer.push_back(isTree);
+    }
+    return answer;
+}
