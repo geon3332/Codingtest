@@ -1,0 +1,46 @@
+#include <string>
+#include <vector>
+#include <map>
+
+using namespace std;
+
+vector<int> solution(vector<string> gems) {
+    vector<int> answer;
+
+    map<string, bool> theMap;
+    for (auto data : gems)
+        theMap[data] = true;
+    int maxCount = theMap.size();
+
+    int point1 = 0;
+    int point2 = 0;
+    int target1 = 0, target2 = 0, count = 200000;
+    map<string, int> gemData;
+    gemData[gems[0]]++;
+    while (point1 < gems.size()) {
+        if (gemData.size() == maxCount) {
+            if (count > point2 - point1) {
+                count = point2 - point1;
+                target1 = point1;
+                target2 = point2;
+            }
+        }
+
+        if (gemData.size() < maxCount && point2 < gems.size() - 1) {
+            point2++;
+            gemData[gems[point2]]++;
+        }
+        else {
+            gemData[gems[point1]]--;
+            if (gemData[gems[point1]] <= 0)
+                gemData.erase(gems[point1]);
+
+            point1++;
+        }
+    }
+
+    answer.push_back(target1 + 1);
+    answer.push_back(target2 + 1);
+
+    return answer;
+}
