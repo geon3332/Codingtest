@@ -1,0 +1,40 @@
+#include <string>
+#include <vector>
+#include <list>
+#include <algorithm>
+
+using namespace std;
+
+int solution(int cacheSize, vector<string> cities) {
+    int answer = 0;
+    list<string> cachData;
+
+    if (cacheSize == 0)
+        return cities.size() * 5;
+    
+    for (int i = 0; i < cacheSize; i++)
+        cachData.push_back("");
+
+    // 소문자 변환
+    for (int i = 0; i < cities.size(); i++)
+        transform(cities[i].begin(), cities[i].end(), cities[i].begin(), ::tolower);
+
+    for (auto str : cities) {
+        auto it = find(cachData.begin(), cachData.end(), str);
+
+        // 단어가 존재하면
+        if (it != cachData.end()) {
+            string s = *it;
+            cachData.erase(it);
+            cachData.push_back(s);
+            answer++;
+        }
+        else {
+            cachData.erase(cachData.begin());
+            cachData.push_back(str);
+            answer += 5;
+        }
+    }
+
+    return answer;
+}
