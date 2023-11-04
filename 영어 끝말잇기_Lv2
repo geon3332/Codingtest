@@ -1,0 +1,35 @@
+#include <string>
+#include <vector>
+#include <set>
+#include <iostream>
+
+using namespace std;
+
+vector<int> solution(int n, vector<string> words) {
+    int count = 0;
+    bool isEnd = false;
+    char backChar = words[0][0];
+    vector<int> answer;
+    set<string> usedWords;
+
+    for (auto word : words) {
+        if (usedWords.find(word) == usedWords.end() && backChar == word[0]) {
+            usedWords.insert(word);
+        }
+        else {
+            isEnd = true;
+            break;
+        }
+        backChar = word.back();
+        count++;
+    }
+    if (isEnd) {
+        answer.push_back(count % n + 1);
+        answer.push_back(count / n + 1);
+    }
+    else {
+        answer.push_back(0);
+        answer.push_back(0);
+    }
+    return answer;
+}
