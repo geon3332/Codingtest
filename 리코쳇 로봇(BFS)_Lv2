@@ -1,0 +1,93 @@
+#include <string>
+#include <vector>
+#include <queue>
+#include <iostream>
+
+using namespace std;
+
+int visited[101][101] = { 0 };
+
+struct Point {
+    int x;
+    int y;
+};
+
+struct Data {
+    Point point;
+    int count;
+};
+
+void AddPush(queue<Data> &bfs, vector<string>& board, Point nowPoint, Point moveCount) {
+    int count = visited[nowPoint.x][nowPoint.y] + 1;
+
+    while (true) {
+        nowPoint.x += moveCount.x;
+        nowPoint.y += moveCount.y;
+        
+        if (nowPoint.x < 0 || nowPoint.x >= board.size()
+            || nowPoint.y < 0 || nowPoint.y >= board[0].size()
+            || board[nowPoint.x][nowPoint.y] == 'D'){
+            nowPoint.x -= moveCount.x;
+            nowPoint.y -= moveCount.y;
+            break;
+        }
+    }
+
+    if (visited[nowPoint.x][nowPoint.y] == 0){
+        visited[nowPoint.x][nowPoint.y] = count;
+        bfs.push({ nowPoint, count });
+    }
+}
+
+void SearchPoints(vector<string>& board, Point &start, Point &end) {
+    int searchCount = 0;
+    for (int i = 0; i < board.size(); i++)
+    {
+        for (int j = 0; j < board[i].length(); j++)
+        {
+            switch (board[i][j])
+            {
+            case 'R':
+                start = { i,j };
+                searchCount++;
+                break;
+            case 'G':
+                end = { i,j };
+                searchCount++;
+                break;
+            }
+        }
+        if (searchCount == 2)
+            break;
+    }
+
+}
+
+int solution(vector<string> board) {
+    int answer = -1;
+    Point start, end;
+    queue<Data> bfs;
+
+    SearchPoints(board, start, end);
+    
+    visited[start.x][start.y] = 1;
+    AddPush(bfs, board, start, { -1, 0 });
+    AddPush(bfs, board, start, { 1, 0 });
+    AddPush(bfs, board, start, { 0, -1 });
+    AddPush(bfs, board, start, { 0, 1 });
+    while (!bfs.empty()) {
+        if (bfs.front().point.x == end.x && bfs.front().point.y == end.y){
+            answer = bfs.front().count - 1;
+            break;
+        }
+        
+        Point nowPoint = bfs.front().point;
+        bfs.pop();
+        AddPush(bfs, board, nowPoint, { -1, 0 });
+        AddPush(bfs, board, nowPoint, { 1, 0 });
+        AddPush(bfs, board, nowPoint, { 0, -1 });
+        AddPush(bfs, board, nowPoint, { 0, 1 });
+    }
+    
+    return answer;
+}
