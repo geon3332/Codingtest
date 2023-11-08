@@ -1,0 +1,14 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+string solution(string s) {
+    string answer = "";
+    bool isUpper = true;
+    for (auto c : s){
+        answer += isUpper ? toupper(c) : tolower(c);
+        isUpper = c == ' ';
+    }
+    return answer;
+}
