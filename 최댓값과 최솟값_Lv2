@@ -1,0 +1,30 @@
+#include <string>
+#include <vector>
+#include <cmath>
+#include <limits>
+
+using namespace std;
+
+string solution(string s) {
+    string answer = "";
+    string str = "";
+    // 정수의 최소/최대 값 초기화
+    int minValue = numeric_limits<int>::max();
+    int maxValue = numeric_limits<int>::min();
+
+    // 마지막 숫자 인식을 위해 끝에 공백 문자 추가
+    s += ' ';
+    for (int i = 0; i < s.length(); i++)
+    {
+        if (s[i] == ' ') {
+            int value = stoi(str);
+            minValue = min(value, minValue);
+            maxValue = max(value, maxValue);
+            str = "";
+        }
+        else
+            str += s[i];
+    }
+    answer = to_string(minValue) + " " + to_string(maxValue);
+    return answer;
+}
